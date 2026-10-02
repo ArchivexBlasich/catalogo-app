@@ -22,3 +22,5 @@ imagen oficial (`MONGO_INITDB_ROOT_USERNAME` y `MONGO_INITDB_ROOT_PASSWORD`) viv
 la base `admin`, y `authSource` toma por defecto la base que aparece en el path de la
 URI. Con `mongodb://usuario:pass@host:27017/catalogodb` la autenticación falla con
 `Authentication failed.` aunque las credenciales sean correctas.
+
+El entrypoint de nginx construye una lista con los **nombres** de las variables de entorno que matchean `^API_` y la pasa como `SHELL-FORMAT` a `envsubst`: solo se sustituye esa lista. Así `API_HOST` y `API_PORT` se resuelven al arrancar el contenedor, y ninguna variable de entorno puede pisar variables propias de nginx (`$uri`, `$host`, `$proxy_add_x_forwarded_for`). Sin el filtro, cualquier nombre de variable de entorno que coincida con una variable de nginx se reemplaza por su valor.
