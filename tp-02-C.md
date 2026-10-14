@@ -10,7 +10,7 @@ RUN pip install -r requirements.txt
 
 La imagen  tardo 50s en construirse
 ```bash
-❯ docker build -f 'v1.dockerfile' -t catalogo-api
+❯ docker build -f 'v1.dockerfile' -t catalogo-api:v1
 [+] Building 50.0s (9/9) FINISHED
 ```
 
@@ -21,6 +21,8 @@ Y tiene un tamaño de 1.71GB
 IMAGE                ID             DISK USAGE    CONTENT SIZE   EXTRA
 catalogo-api:v1      761c197cd5f3       1.71GB           445MB
 ```
+
+**Nota (TP3).** Este Dockerfile declara cómo construir el entorno pero no cómo arrancar el proceso: sin `CMD`, la imagen hereda `CMD ["python3"]` de `python:3.12`, el contenedor sale con código 0 al instante y `docker logs` queda vacío. Para el TP3, donde la API corre dentro del contenedor, se agregó a `v1.dockerfile` el contrato de arranque — `WORKDIR /app`, `ENV PYTHONUNBUFFERED=1`, `EXPOSE 8000` y `CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]`. El tamaño de la imagen no cambia (1,71 GB / 445 MB); sí cambian los hashes de las capas de `COPY` y `pip install`.
 
 
 ## Ejercicio 2
